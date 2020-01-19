@@ -1,6 +1,6 @@
 {
   "name": "jupyterlab-launcher-files",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Add Extra File Types to JupyterLab Launcher",
   "keywords": [
     "jupyter",
@@ -15,7 +15,7 @@
   "author": "H0pp3rD3v",
   "files": [
     "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
-    "style/**/*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+    "*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
   ],
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

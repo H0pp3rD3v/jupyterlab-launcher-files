@@ -13,11 +13,20 @@ import { IMainMenu } from '@jupyterlab/mainmenu';
 import '../index.css';
 
 const FACTORY = 'Editor';
-const ICON_CLASS = 'jp-PythonIcon';
+const PY_ICON = 'jp-PythonIcon';
+const SH_ICON = 'jp-TerminalIcon';
+const HTML_ICON = 'jp-Html5Icon';
+const TEXT_ICON = 'jp-FileIcon';
+const JSON_ICON = 'jp-JsonIcon';
 const PALETTE_CATEGORY = 'Text Editor';
 
 namespace CommandIDs {
-  export const createNew = 'fileeditor:create-new-python-file';
+  export const newPy = 'fileeditor:create-new-python-file';
+  export const newSh = 'fileeditor:create-new-shell-file';
+  export const newHtml = 'fileeditor:create-new-html-file';
+  export const newCss = 'fileeditor:create-new-css-file';
+  export const newJs = 'fileeditor:create-new-javascript-file';
+  export const newJson = 'fileeditor:create-new-json-file';
 };
 
 const extension: JupyterFrontEndPlugin<void> = {
@@ -39,17 +48,13 @@ const extension: JupyterFrontEndPlugin<void> = {
     palette: ICommandPalette,
   ) => {
     const { commands } = app;
-
-    const py = CommandIDs.createNew;
-    const sh = CommandIDs.createNew;
-    const css = CommandIDs.createNew;
-    const js = CommandIDs.createNew;
-    const html = CommandIDs.createNew;
-
-    commands.addCommand(py, {
+    
+    var command = CommandIDs.newPy;
+      
+    commands.addCommand(command, {
       label: args => (args['isPalette'] ? 'New Python File' : 'Python File'),
       caption: 'Create a new Python file',
-      iconClass: args => (args['isPalette'] ? '' : ICON_CLASS),
+      iconClass: args => (args['isPalette'] ? '' : PY_ICON),
       execute: async args => {
         const cwd = args['cwd'] || browserFactory.defaultBrowser.model.path;
         const model = await commands
@@ -64,10 +69,33 @@ const extension: JupyterFrontEndPlugin<void> = {
         });
       }
     });
-    commands.addCommand(sh, {
+      
+    if (launcher) {
+      launcher.add({
+        command,
+        category: 'Other',
+        rank: 1
+      });
+    }
+      
+    if (palette) {
+      palette.addItem({
+        command,
+        args: { isPalette: true},
+        category: PALETTE_CATEGORY
+      });
+    }
+      
+    if (menu) {
+      menu.fileMenu.newMenu.addGroup([{ command }], 30);
+    }
+      
+    var command = CommandIDs.newSh;
+    
+    commands.addCommand(command, {
       label: args => (args['isPalette'] ? 'New Shell File' : 'Shell File'),
       caption: 'Create a new Shell file',
-      iconClass: args => (args['isPalette'] ? '' : ICON_CLASS),
+      iconClass: args => (args['isPalette'] ? '' : SH_ICON),
       execute: async args => {
         const cwd = args['cwd'] || browserFactory.defaultBrowser.model.path;
         const model = await commands
@@ -82,46 +110,33 @@ const extension: JupyterFrontEndPlugin<void> = {
         });
       }
     });
-    commands.addCommand(css, {
-      label: args => (args['isPalette'] ? 'New CSS File' : 'CSS File'),
-      caption: 'Create a new CSS file',
-      iconClass: args => (args['isPalette'] ? '' : ICON_CLASS),
-      execute: async args => {
-        const cwd = args['cwd'] || browserFactory.defaultBrowser.model.path;
-        const model = await commands
-          .execute('docmanager:new-untitled', {
-            path: cwd,
-            type: 'file',
-            ext: 'css'
-          });
-        return commands.execute('docmanager:open', {
-          path: model.path,
-          factory: FACTORY
-        });
-      }
-    });
-    commands.addCommand(css, {
-      label: args => (args['isPalette'] ? 'New JS File' : 'JS File'),
-      caption: 'Create a new JS file',
-      iconClass: args => (args['isPalette'] ? '' : ICON_CLASS),
-      execute: async args => {
-        const cwd = args['cwd'] || browserFactory.defaultBrowser.model.path;
-        const model = await commands
-          .execute('docmanager:new-untitled', {
-            path: cwd,
-            type: 'file',
-            ext: 'js'
-          });
-        return commands.execute('docmanager:open', {
-          path: model.path,
-          factory: FACTORY
-        });
-      }
-    });
-    commands.addCommand(css, {
+
+    if (launcher) {
+      launcher.add({
+        command,
+        category: 'Other',
+        rank: 1
+      });
+    }
+
+    if (palette) {
+      palette.addItem({
+        command,
+        args: { isPalette: true},
+        category: PALETTE_CATEGORY
+      });
+    }
+
+    if (menu) {
+      menu.fileMenu.newMenu.addGroup([{ command }], 30);
+    }
+      
+    var command = CommandIDs.newHtml;
+    
+    commands.addCommand(command, {
       label: args => (args['isPalette'] ? 'New HTML File' : 'HTML File'),
       caption: 'Create a new HTML file',
-      iconClass: args => (args['isPalette'] ? '' : ICON_CLASS),
+      iconClass: args => (args['isPalette'] ? '' : HTML_ICON),
       execute: async args => {
         const cwd = args['cwd'] || browserFactory.defaultBrowser.model.path;
         const model = await commands
@@ -136,72 +151,148 @@ const extension: JupyterFrontEndPlugin<void> = {
         });
       }
     });
-      
-    // add to the launcher
+
     if (launcher) {
       launcher.add({
-        py,
+        command,
         category: 'Other',
         rank: 1
-      });
-      launcher.add({
-        sh,
-        category: 'Other',
-        rank: 1
-      });
-      launcher.add({
-        html,
-        category: 'Other',
-        rank: 2
-      });
-      launcher.add({
-        css,
-        category: 'Other',
-        rank: 2
-      });
-      launcher.add({
-        js,
-        category: 'Other',
-        rank: 2
       });
     }
 
-    // add to the palette
     if (palette) {
       palette.addItem({
-        py,
-        args: { isPalette: true},
-        category: PALETTE_CATEGORY
-      });
-      palette.addItem({
-        sh,
-        args: { isPalette: true},
-        category: PALETTE_CATEGORY
-      });
-      palette.addItem({
-        html,
-        args: { isPalette: true},
-        category: PALETTE_CATEGORY
-      });
-      palette.addItem({
-        css,
-        args: { isPalette: true},
-        category: PALETTE_CATEGORY
-      });
-      palette.addItem({
-        js,
+        command,
         args: { isPalette: true},
         category: PALETTE_CATEGORY
       });
     }
 
-    // add to the menu
     if (menu) {
-      menu.fileMenu.newMenu.addGroup([{ py }], 30);
-      menu.fileMenu.newMenu.addGroup([{ sh }], 30);
-      menu.fileMenu.newMenu.addGroup([{ html }], 30);
-      menu.fileMenu.newMenu.addGroup([{ css }], 30);
-      menu.fileMenu.newMenu.addGroup([{ js }], 30);
+      menu.fileMenu.newMenu.addGroup([{ command }], 30);
+    }
+    
+    var command = CommandIDs.newCss;
+    
+    commands.addCommand(command, {
+      label: args => (args['isPalette'] ? 'New CSS File' : 'CSS File'),
+      caption: 'Create a new CSS file',
+      iconClass: args => (args['isPalette'] ? '' : TEXT_ICON),
+      execute: async args => {
+        const cwd = args['cwd'] || browserFactory.defaultBrowser.model.path;
+        const model = await commands
+          .execute('docmanager:new-untitled', {
+            path: cwd,
+            type: 'file',
+            ext: 'css'
+          });
+        return commands.execute('docmanager:open', {
+          path: model.path,
+          factory: FACTORY
+        });
+      }
+    });
+
+    if (launcher) {
+      launcher.add({
+        command,
+        category: 'Other',
+        rank: 2
+      });
+    }
+
+    if (palette) {
+      palette.addItem({
+        command,
+        args: { isPalette: true},
+        category: PALETTE_CATEGORY
+      });
+    }
+
+    if (menu) {
+      menu.fileMenu.newMenu.addGroup([{ command }], 30);
+    }
+      
+    var command = CommandIDs.newJs;
+    
+    commands.addCommand(command, {
+      label: args => (args['isPalette'] ? 'New Javascript File' : 'Javascript File'),
+      caption: 'Create a new Javascript file',
+      iconClass: args => (args['isPalette'] ? '' : TEXT_ICON),
+      execute: async args => {
+        const cwd = args['cwd'] || browserFactory.defaultBrowser.model.path;
+        const model = await commands
+          .execute('docmanager:new-untitled', {
+            path: cwd,
+            type: 'file',
+            ext: 'js'
+          });
+        return commands.execute('docmanager:open', {
+          path: model.path,
+          factory: FACTORY
+        });
+      }
+    });
+
+    if (launcher) {
+      launcher.add({
+        command,
+        category: 'Other',
+        rank: 2
+      });
+    }
+
+    if (palette) {
+      palette.addItem({
+        command,
+        args: { isPalette: true},
+        category: PALETTE_CATEGORY
+      });
+    }
+
+    if (menu) {
+      menu.fileMenu.newMenu.addGroup([{ command }], 30);
+    }
+      
+    var command = CommandIDs.newJson;
+    
+    commands.addCommand(command, {
+      label: args => (args['isPalette'] ? 'New JSON File' : 'JSON File'),
+      caption: 'Create a new JSON file',
+      iconClass: args => (args['isPalette'] ? '' : JSON_ICON),
+      execute: async args => {
+        const cwd = args['cwd'] || browserFactory.defaultBrowser.model.path;
+        const model = await commands
+          .execute('docmanager:new-untitled', {
+            path: cwd,
+            type: 'file',
+            ext: 'json'
+          });
+        return commands.execute('docmanager:open', {
+          path: model.path,
+          factory: FACTORY
+        });
+      }
+    });
+
+    if (launcher) {
+      launcher.add({
+        command,
+        category: 'Other',
+        rank: 2
+      });
+    }
+
+    if (palette) {
+      palette.addItem({
+        command,
+        args: { isPalette: true},
+        category: PALETTE_CATEGORY
+      });
+    }
+
+    if (menu) {
+      menu.fileMenu.newMenu.addGroup([{ command }], 30);
     }
   }
 };
