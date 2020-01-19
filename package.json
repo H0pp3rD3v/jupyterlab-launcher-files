@@ -7,9 +7,9 @@
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "",
+  "homepage": "https://github.com/H0pp3rD3v/jupyterlab-launcher-files",
   "bugs": {
-    "url": ""
+    "url": "https://github.com/H0pp3rD3v/jupyterlab-launcher-files/issues"
   },
   "license": "BSD-3-Clause",
   "author": "H0pp3rD3v",
@@ -21,7 +21,7 @@
   "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/H0pp3rD3v/jupyterlab-launcher-files.git"
   },
   "scripts": {
     "build": "tsc",
